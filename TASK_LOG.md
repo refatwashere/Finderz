@@ -6,10 +6,10 @@ This file is the running register of project work and proposed follow-ups. Updat
 
 | Status | Count |
 | --- | ---: |
-| Completed tasks | 8 |
+| Completed tasks | 9 |
 | In progress | 0 |
 | Proposed follow-up tasks | 5 |
-| Total logged items | 13 |
+| Total logged items | 14 |
 
 ## Completed
 
@@ -23,6 +23,7 @@ This file is the running register of project work and proposed follow-ups. Updat
 | D-06 | Rename the product to Finderz | Updated app copy, metadata, package name, source folder paths, stylesheet identifiers, and documentation; added migration from the old browser-storage key. `npm test` (55 app-data/auth tests) and TypeScript pass. The explicit script suite retains 10 known unrelated failures. |
 | D-07 | Fix Windows Vite launch failure | Updated the environment wrapper to invoke the local Vite entry through Node on all platforms. The focused regression test passes and the npm dev script starts Vite successfully. |
 | D-08 | Add developer attribution | Added the developer's name, GitHub, email, and website to the README and project guide, and recorded the author in package metadata. |
+| D-09 | Assess readiness and publish to GitHub | Production build and typecheck pass; lint passes with two warnings; configured app-data/auth tests pass (55). Explicit script tests retain PWA metadata expectation failures and Windows symlink permission failures. Pushed initial commit `4ad1115` to `refatwashere/Finderz` on `main` and verified the remote README. |
 
 ## Proposed Follow-Up Tasks
 
@@ -45,3 +46,4 @@ This file is the running register of project work and proposed follow-ups. Updat
 - Renamed the product branding and app-owned module folders to Finderz. Added a one-time migration from `kestrel-desk` to `finderz-desk` so browser-local saved state is retained.
 - Fixed `spawn vite ENOENT` on Windows by resolving the local Vite JavaScript entry through `process.execPath`; the focused wrapper test passes and the dev server is running.
 - Added developer contact details to project documentation and the package author metadata.
+- Audited deployment readiness, excluded `.grok`, `.vercel`, dependencies, and QA screenshots, removed stale Kestrel component/library copies, and pushed the Finderz source to `https://github.com/refatwashere/Finderz` on `main`.
