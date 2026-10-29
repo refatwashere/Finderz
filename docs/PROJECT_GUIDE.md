@@ -127,6 +127,8 @@ The app-builder shell depends on `public/__grok/`, `server/`, `scripts/grok-pwa-
 
 These are recommendations, not completed features. They are also listed as proposed work in [the task log](../TASK_LOG.md).
 
+For live hosting setup, environment variables, deploy verification, and rollback procedures, see the [deployment guide](DEPLOYMENT.md).
+
 | Priority | Recommendation | Why it fits Finderz |
 | --- | --- | --- |
 | High | Return per-provider status and show partial failures, timeouts, and empty results distinctly. | Makes a quiet upstream outage distinguishable from a genuine no-match hunt. |

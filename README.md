@@ -41,6 +41,7 @@ npm run build
 ## Documentation
 
 - [Project guide](docs/PROJECT_GUIDE.md): architecture, data flow, providers, state, operations, limitations, and prioritized enhancement advice.
+- [Deployment guide](docs/DEPLOYMENT.md): Vercel setup, environment variables, production checks, domain, and release operations.
 - [Task log](TASK_LOG.md): completed work, proposed work, and a maintained tally.
 
 ## Developer
