@@ -6,12 +6,14 @@ import type { Find, HuntQuery, SavedFind, Source, Taste, XPin } from "./types";
 
 type State = {
   sources: Source[];
+  includeJavinfo: boolean;
   taste: Taste;
   file: SavedFind[];
   pins: XPin[];
   lastQuery: HuntQuery;
   lastFinds: Find[];
   setSources: (sources: Source[]) => void;
+  setIncludeJavinfo: (enabled: boolean) => void;
   toggleSource: (id: string) => void;
   addSource: (source: Source) => void;
   removeSource: (id: string) => void;
@@ -52,12 +54,14 @@ export const useDesk = create<State>()(
   persist(
     (set, get) => ({
       sources: mergeSources(undefined),
+      includeJavinfo: false,
       taste: emptyTaste,
       file: [],
       pins: [],
       lastQuery: { query: "", genre: "", code: "" },
       lastFinds: [],
       setSources: (sources) => set({ sources }),
+      setIncludeJavinfo: (includeJavinfo) => set({ includeJavinfo }),
       toggleSource: (id) =>
         set({
           sources: get().sources.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s)),
@@ -110,6 +114,7 @@ export const useDesk = create<State>()(
       version: 1,
       partialize: (s) => ({
         sources: s.sources,
+        includeJavinfo: s.includeJavinfo,
         taste: s.taste,
         file: s.file,
         pins: s.pins,
@@ -120,6 +125,7 @@ export const useDesk = create<State>()(
           ...current,
           ...p,
           sources: mergeSources(p.sources),
+          includeJavinfo: p.includeJavinfo === true,
           taste: p.taste ?? emptyTaste,
           file: p.file ?? [],
           pins: p.pins ?? [],

@@ -5,6 +5,7 @@ Finderz is a video discovery desk for finding films, series, anime, and public-d
 ## What It Does
 
 - Searches Apple, AniList, TVMaze, the Internet Archive, and Wikipedia in parallel.
+- Optionally searches JAVINFO for adult-catalog metadata when enabled in Sources and `JAVINFO_API_KEY` is configured. It does not retrieve or display media streams or downloads.
 - Accepts a title, a catalog code, and an optional genre.
 - Ranks and deduplicates results using title similarity, genre preference, saved taste marks, and available metadata.
 - Opens results in enabled destinations such as YouTube, Vimeo, Letterboxd, IMDb, JustWatch, and X video search.
@@ -26,6 +27,8 @@ npm run dev
 The Vite server is configured for port `8080`. The `dev` script runs through `scripts/with-app-env.mjs`; use the npm script rather than invoking Vite directly so the app-builder environment is applied consistently.
 
 No API key is required for catalog searches. To enable optional AI briefs, provide `XAI_API_KEY` to the server environment. Keep it server-side; never expose it through a `VITE_` variable or commit it. Each brief is a user-triggered request to xAI and includes the result title, year, kind, and synopsis. See [the project guide](docs/PROJECT_GUIDE.md#privacy-and-external-services) before enabling it in a deployed environment.
+
+JAVINFO is optional, adult-only, and usage-based. Configure a rotated `JAVINFO_API_KEY` as a server-side environment variable to enable the opt-in source. Never use a `VITE_` prefix or commit the key. Its published `/query` price is $0.0004 per successful call.
 
 ## Quality Checks
 

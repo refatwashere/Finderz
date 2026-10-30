@@ -6,10 +6,10 @@ This file is the running register of project work and proposed follow-ups. Updat
 
 | Status | Count |
 | --- | ---: |
-| Completed tasks | 10 |
+| Completed tasks | 12 |
 | In progress | 0 |
 | Proposed follow-up tasks | 5 |
-| Total logged items | 15 |
+| Total logged items | 17 |
 
 ## Completed
 
@@ -25,6 +25,8 @@ This file is the running register of project work and proposed follow-ups. Updat
 | D-08 | Add developer attribution | Added the developer's name, GitHub, email, and website to the README and project guide, and recorded the author in package metadata. |
 | D-09 | Assess readiness and publish to GitHub | Production build and typecheck pass; lint passes with two warnings; configured app-data/auth tests pass (55). Explicit script tests retain PWA metadata expectation failures and Windows symlink permission failures. Pushed initial commit `4ad1115` to `refatwashere/Finderz` on `main` and verified the remote README. |
 | D-10 | Document live deployment and hosting | Added Vercel/Nitro deployment steps, environment modes, database/auth guidance, smoke checks, domain operations, troubleshooting, and deployment caveats in `docs/DEPLOYMENT.md`. |
+| D-11 | Accept bare HTTPS custom-source URLs | Normalize custom search templates without a scheme to HTTPS before validation and storage; verified `www.javx.cc/?s={q}` is accepted. This remains an outbound destination, not a catalog provider. |
+| D-12 | Add optional JAVINFO catalog search | Added an opt-in, server-side `/query` integration with metadata-only mapping, an explicit adult-results switch, tests, and deployment/privacy documentation. The key is read from `JAVINFO_API_KEY` and is not stored in source. Three mapper tests, typecheck, and production build pass; lint has two pre-existing warnings. The pasted key must be rotated before production use. |
 
 ## Proposed Follow-Up Tasks
 
@@ -49,3 +51,5 @@ This file is the running register of project work and proposed follow-ups. Updat
 - Added developer contact details to project documentation and the package author metadata.
 - Audited deployment readiness, excluded `.grok`, `.vercel`, dependencies, and QA screenshots, removed stale Kestrel component/library copies, and pushed the Finderz source to `https://github.com/refatwashere/Finderz` on `main`.
 - Added the live deployment and hosting runbook and linked it from the README and project guide.
+- Updated custom source input to prepend HTTPS when omitted, so a bare `www` search template can be added as a dispatch destination.
+- Added optional JAVINFO metadata search using a server-side environment key; no API credential is stored in the repository. The key provided in chat must be rotated before production use.

@@ -4,6 +4,7 @@ export const PROVIDERS = [
   "tvmaze",
   "archive",
   "wikipedia",
+  "javinfo",
 ] as const;
 
 export type Provider = (typeof PROVIDERS)[number];

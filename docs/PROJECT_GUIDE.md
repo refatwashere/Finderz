@@ -27,7 +27,7 @@ The app does not stream or host media, verify subscription access, or report whe
 
 ### Discovery and server functions
 
-`src/lib/finderz/hunt.ts` owns the catalog requests and the `huntCatalog`, `embedXPost`, and `briefFind` server functions. Catalog calls use public HTTPS APIs, run concurrently, and have an eight-second timeout. The server function validates inputs before requests are made. Provider failures are handled independently so one unavailable service need not prevent results from other services.
+`src/lib/finderz/hunt.ts` owns the catalog requests and the `huntCatalog`, `embedXPost`, and `briefFind` server functions. Catalog calls use public HTTPS APIs, run concurrently, and have an eight-second timeout. The server function validates inputs before requests are made. Provider failures are handled independently so one unavailable service need not prevent results from other services. JAVINFO is queried only when the adult-results switch is enabled and `JAVINFO_API_KEY` is configured.
 
 The catalog adapters currently map:
 
@@ -38,6 +38,7 @@ The catalog adapters currently map:
 | TVMaze | TV show search | A title-oriented series source. |
 | Internet Archive Advanced Search | Movie media records | Results are filtered by title-token overlap. |
 | Wikipedia search and page summaries | Film and television-related pages | Text is heuristically filtered to keep likely moving-image entries. |
+| JAVINFO `/query` | JAV release metadata | Optional; requires server-side `JAVINFO_API_KEY`. Only titles, codes, release years, covers, and HTTPS catalog-page links are mapped; stream/download fields are ignored. |
 
 `src/lib/finderz/types.ts` defines the normalized `Find`, `Source`, and saved-state types. Adding a catalog provider requires a provider type, an adapter and normalization in `hunt.ts`, sensible result metadata, failure behavior, and tests. A user-created source is different: it only adds a search destination and does not add a new catalog API.
 
@@ -49,7 +50,7 @@ The catalog adapters currently map:
 
 `src/lib/finderz/sources.ts` defines built-in sources and URL interpolation. Built-in catalog sources are Apple TV, AniList, and Internet Archive; other built-ins dispatch to sites such as YouTube, Vimeo, Letterboxd, IMDb, JustWatch, and X. Result cards dispatch to enabled non-catalog sources. The overall dispatch strip can include all enabled sources.
 
-Custom templates must be HTTPS URLs containing `{q}` or `{id}`. Supported placeholders are `{q}`, `{id}`, `{genre}`, and `{year}`. Values are URL-encoded. Custom templates are destinations chosen by the user; they are not fetched by Finderz as catalog providers.
+Custom templates must resolve to HTTPS URLs containing `{q}` or `{id}`. The source form automatically adds `https://` when a scheme is omitted. Supported placeholders are `{q}`, `{id}`, `{genre}`, and `{year}`. Values are URL-encoded. Custom templates are destinations chosen by the user; they are not fetched by Finderz as catalog providers.
 
 ### Browser state and persistence
 
@@ -75,6 +76,7 @@ There is no Finderz account requirement, cross-device synchronization, or Finder
 ## Privacy and External Services
 
 - Search terms and selected genre/code are sent from the server to the relevant catalog providers. Their availability, terms, rate limits, and returned content are outside Finderz's control.
+- When enabled, title/code searches are also sent to JAVINFO. Its published `/query` endpoint costs $0.0004 per successful call and is rate-limited per account. JAVINFO returns adult-catalog metadata; its Finderz switch is opt-in and off by default. The integration does not expose stream, torrent, or download fields.
 - Outbound destination links open third-party sites in a new tab. Those sites receive the search query when opened.
 - Saved finds, source preferences, taste marks, and X pins are held in browser local storage, not encrypted or synced by Finderz. Anyone with access to the same browser profile may see them.
 - When AI briefs are enabled and requested, the selected catalog metadata is sent to xAI. The API key belongs to the deployment environment and its usage may be billable.

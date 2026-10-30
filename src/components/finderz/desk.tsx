@@ -27,6 +27,7 @@ const SUGGESTIONS: HuntQuery[] = [
 
 export function Desk() {
   const sources = useDesk((s) => s.sources);
+  const includeJavinfo = useDesk((s) => s.includeJavinfo);
   const taste = useDesk((s) => s.taste);
   const file = useDesk((s) => s.file);
   const lastQuery = useDesk((s) => s.lastQuery);
@@ -66,7 +67,12 @@ export function Desk() {
     setHunted(true);
     try {
       const res = await huntCatalog({
-        data: { query: q.query, genre: q.genre || undefined, code: q.code || undefined },
+        data: {
+          query: q.query,
+          genre: q.genre || undefined,
+          code: q.code || undefined,
+          includeJavinfo,
+        },
       });
       setLast(q, res.finds);
       if (res.error) setError(res.error);

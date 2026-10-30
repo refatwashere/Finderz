@@ -48,9 +48,10 @@ Set variables in Vercel's project environment settings, not in committed files. 
 | --- | --- | --- |
 | `VITE_AUTH_ENABLED` | Set to `false` for Production, Preview, and Development | Keeps the prewired auth layer disabled for the current account-free Finderz experience. Set it before building because the flag also affects client bundles. |
 | `XAI_API_KEY` | Optional | Enables user-requested AI briefs. This is a server-only xAI key and may incur usage charges. Leave unset to disable the feature. |
+| `JAVINFO_API_KEY` | Optional | Enables the adult-only JAVINFO provider when a user explicitly turns it on in Sources. Server-only; never use a `VITE_` prefix. Its published `/query` rate is $0.0004 per successful request and up to 10 requests/minute per account. Rotate the key pasted into chat before configuring this variable. |
 | `DATABASE_URL` | Not required | Do not configure solely for local browser-saved finds. Add only when a server-side feature actually needs durable PostgreSQL data. |
 
-Catalog searches do not require credentials. They call Apple, AniList, TVMaze, the Internet Archive, and Wikipedia from server functions. Their availability and rate limits are controlled by those providers.
+Apple, AniList, TVMaze, Internet Archive, and Wikipedia searches do not require credentials. JAVINFO requires `JAVINFO_API_KEY` and remains disabled until its Sources switch is explicitly enabled. Its results are adult-only catalog metadata; the integration ignores media/stream and download fields.
 
 ### If accounts or Grok identity are intentionally enabled
 
@@ -77,8 +78,9 @@ After every first deployment or runtime/configuration change:
 3. Save a result and reload in the same browser profile. Confirm the local file persists; verify it is not presented as cross-device or server-backed storage.
 4. Toggle a source, refresh, and verify the preference persists. Test the mobile layout at a narrow viewport.
 5. If `XAI_API_KEY` is configured, request one brief and inspect Vercel function logs for upstream/API errors. Confirm the key is not present in the client bundle or browser network responses.
-6. If authentication is enabled, test sign-in, callback, session persistence, sign-out, and a fresh browser session. Validate the final callback origin and database migrations before inviting users.
-7. Check Vercel function and build logs. A successful build alone does not prove that the deployed page hydrates or that server functions and static assets are reachable.
+6. If JAVINFO is configured, confirm its opt-in switch defaults off, enable it only for an adult test, submit a known catalog code, and inspect the server result. Confirm the API key is absent from client bundles and no stream/download URLs are rendered.
+7. If authentication is enabled, test sign-in, callback, session persistence, sign-out, and a fresh browser session. Validate the final callback origin and database migrations before inviting users.
+8. Check Vercel function and build logs. A successful build alone does not prove that the deployed page hydrates or that server functions and static assets are reachable.
 
 The PWA install page is served by the configured Nitro middleware at `/?install=1&platform=ios`. Preserve `serverDir: "./server"` and the PWA plugin wiring if you change the Vite config.
 

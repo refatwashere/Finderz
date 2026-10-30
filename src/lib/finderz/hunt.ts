@@ -1,12 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { discreet, runtimeLabel } from "./copy";
+import { mapJavinfoResults } from "./javinfo";
 import type { Find } from "./types";
 
 const HuntInput = z.object({
   query: z.string().trim().max(120),
   genre: z.string().trim().max(40).optional(),
   code: z.string().trim().max(40).optional(),
+  includeJavinfo: z.boolean().optional(),
 });
 
 const XPinInput = z.object({
@@ -337,6 +339,36 @@ async function huntWiki(q: string): Promise<Find[]> {
     });
 }
 
+async function huntJavinfo(q: string): Promise<Find[]> {
+  const apiKey = process.env.JAVINFO_API_KEY?.trim();
+  if (!apiKey || !q.trim()) return [];
+
+  try {
+    const response = await fetch("https://api.javinfo.dev/query", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": UA,
+        "x-javinfo-key": apiKey,
+      },
+      body: JSON.stringify({
+        q: q.trim(),
+        providers: "fanza,javdatabase,javlibrary",
+      }),
+      signal: AbortSignal.timeout(TIMEOUT),
+    });
+    if (!response.ok) {
+      console.warn(`[javinfo] query failed (${response.status})`);
+      return [];
+    }
+    return mapJavinfoResults(await response.json());
+  } catch {
+    console.warn("[javinfo] query request failed");
+    return [];
+  }
+}
+
 function huntTerm(query: string, code?: string): string {
   return (query || code || "").trim();
 }
@@ -351,13 +383,15 @@ export const huntCatalog = createServerFn({ method: "POST" })
     const code = data.code || undefined;
     const appleQuery = data.query.trim() || q;
 
-    const settled = await Promise.allSettled([
+    const searches = [
       huntApple(appleQuery, genre),
       huntAniList(appleQuery || q, genre, code),
       huntTvMaze(appleQuery || q),
       huntArchive(q),
       huntWiki(appleQuery || q),
-    ]);
+    ];
+    if (data.includeJavinfo === true) searches.push(huntJavinfo(appleQuery || q));
+    const settled = await Promise.allSettled(searches);
 
     const finds: Find[] = [];
     let failures = 0;
